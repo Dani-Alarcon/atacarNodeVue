@@ -15,7 +15,7 @@ const props = defineProps({
         <h3>{{ props.pokemon.name }}</h3>
         <p>{{ props.pokemon.type }} - {{ props.pokemon.generation }}</p>
     </div>
-    <!--<RouterLink :to="{ name: 'mealDetail', params: { idMeal: props.pokemon.id } }">Recepta</RouterLink>-->
+    <RouterLink :to="{ name: 'pokemonDetail', params: { id: props.pokemon.id } }">Pokemon</RouterLink>
     
     <hr>
 
