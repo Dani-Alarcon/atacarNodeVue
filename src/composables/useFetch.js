@@ -7,18 +7,22 @@ export function useFetch(url) {
     const loading = ref(false)
 
     const fetchData = async () => {
-        loading.value = true
-        error.value = null
-        const res = await fetch(url.value)
+        loading.value = true;
+        error.value = null;
         try {
+            const res = await fetch(url.value, {
+                method: 'GET',
+                credentials: 'include' 
+            });
+
             if (!res.ok) {
-                throw new Error('Error en la peticio: ' + res.status)
+                throw new Error('Error en la peticio: ' + res.status);
             }
-            data.value = await res.json()
+            data.value = await res.json();
         } catch (err) {
-            error.value = err.message
+            error.value = err.message;
         } finally {
-            loading.value = false
+            loading.value = false;
         }
     }
     onMounted(fetchData)

@@ -24,7 +24,7 @@ const { data, loading, error, fetchData } = useFetch(url)
   <div v-else-if="error">{{ error }}</div>
   <div v-else>
     <div v-if="data && data.pokemons">
-      <PokemonCard v-for="pokemon in data.pokemons" :key="pokemons.id" :pokemon="pokemon" />
+      <PokemonCard v-for="pokemon in data.pokemons" :key="pokemon.id" :pokemon="pokemon" />
     </div>
   </div>
 
