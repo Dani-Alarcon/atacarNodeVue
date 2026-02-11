@@ -1,4 +1,6 @@
 <script setup>
+import { useRouter } from 'vue-router'
+
 const props = defineProps({
     pokemon: {
         type: Object,
@@ -8,40 +10,31 @@ const props = defineProps({
 
 const eliminarPokemon = async () => {
     if (!confirm(`Segur que vols eliminar a ${props.pokemon.name}?`)) return
-
     try {
         const res = await fetch(`http://localhost:3000/pokemons/${props.pokemon.id}`, {
             method: 'DELETE',
-            headers: {
-                'Accept': 'application/json'
-            },
+            headers: { 'Accept': 'application/json' },
             credentials: 'include'
         })
-
-        if (res.ok) {
-            window.location.reload()
-        } else {
-            alert('Error en eliminar el pokemon')
-        }
+        if (res.ok) window.location.reload()
     } catch (err) {
         console.error(err)
-        alert('Error de connexió')
     }
 }
 </script>
 
 <template>
     <p>Pokemons</p>
-    <div>    
+    <div>
         <img :src="props.pokemon.imatge" :alt="props.pokemon.name">
         <h3>{{ props.pokemon.name }}</h3>
         <p>{{ props.pokemon.type }} - {{ props.pokemon.generation }}</p>
     </div>
     <div class="accions">
-        <RouterLink :to="{ name: 'pokemonDetail', params: { id: props.pokemon.id } }">Detall Pokemon</RouterLink>
+        <RouterLink :to="{ name: 'pokemonDetail', params: { id: props.pokemon.id } }">Detall</RouterLink>
+        <RouterLink :to="{ path: `/pokemon/edit/${props.pokemon.id}` }" class="btn-edit">Editar</RouterLink>
         <button @click="eliminarPokemon" class="btn-delete">Eliminar</button>
     </div>
-    
     <hr>
 </template>
 
@@ -49,21 +42,28 @@ const eliminarPokemon = async () => {
 img {
     height: 150px;
 }
+
 .accions {
     display: flex;
     gap: 10px;
     align-items: center;
     margin-top: 10px;
 }
+
 .btn-delete {
     background-color: #ff4d4d;
     color: white;
     border: none;
     padding: 5px 10px;
     cursor: pointer;
-    border-radius: 4px;
 }
-.btn-delete:hover {
-    background-color: #cc0000;
+
+.btn-edit {
+    background-color: #ffc107;
+    color: black;
+    padding: 5px 10px;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 14px;
 }
 </style>
