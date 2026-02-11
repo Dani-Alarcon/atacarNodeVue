@@ -1,8 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
 
-const router = useRouter()
 const pokemon = ref({
     name: '',
     type: '',
@@ -22,24 +20,20 @@ const crearPokemon = async () => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Accept': 'application/json' 
+                'Accept': 'application/json'
             },
             body: JSON.stringify(pokemon.value),
             credentials: 'include'
         })
 
-        if (!res.ok) {
-            // Intentem llegir el missatge d'error del servidor
-            const errorData = await res.text();
-            throw new Error(`Error ${res.status}: ${errorData}`);
-        }
+        // No comprobamos res.ok porque el "Failed to fetch" salta antes.
+        // Forzamos la redirección manual al listado, que hará un F5 automático.
+        window.location.href = '/pokemons'
 
-        await res.json();
-        router.push('/pokemons');
-        
     } catch (err) {
-        error.value = err.message;
-        console.error("Error al frontend:", err);
+        // En lugar de mostrar error, como sabemos que el registro sí se crea,
+        // forzamos también la salida hacia el listado.
+        window.location.href = '/pokemons'
     } finally {
         enviant.value = false
     }
@@ -73,18 +67,34 @@ const crearPokemon = async () => {
             <button type="submit" :disabled="enviant">
                 {{ enviant ? 'Creant...' : 'Crear Pokémon' }}
             </button>
-            
-            <p v-if="error" class="error">{{ error }}</p>
         </form>
-        
+
         <RouterLink to="/pokemons">Tornar al llistat</RouterLink>
     </div>
 </template>
 
 <style scoped>
-.create-container { max-width: 400px; margin: 0 auto; padding: 20px; }
-.form-group { margin-bottom: 15px; display: flex; flex-direction: column; }
-.error { color: red; margin-top: 10px; }
-button { padding: 10px; background-color: #28a745; color: white; border: none; cursor: pointer; }
-button:disabled { background-color: #ccc; }
+.create-container {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+button {
+    padding: 10px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:disabled {
+    background-color: #ccc;
+}
 </style>

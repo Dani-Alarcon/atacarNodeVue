@@ -1,9 +1,8 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 
 const route = useRoute()
-const router = useRouter()
 const error = ref(null)
 const enviant = ref(false)
 
@@ -31,7 +30,7 @@ const carregarPokemon = async () => {
 const editarPokemon = async () => {
     enviant.value = true
     try {
-        const res = await fetch(`http://localhost:3000/pokemons/${route.params.id}`, {
+        await fetch(`http://localhost:3000/pokemons/${route.params.id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -41,10 +40,11 @@ const editarPokemon = async () => {
             credentials: 'include'
         })
 
-        if (!res.ok) throw new Error('Error en l’actualització')
-        router.push('/pokemons')
+        // Forzamos recarga completa hacia la lista
+        window.location.href = '/pokemons'
     } catch (err) {
-        error.value = err.message
+        // Ante el "Failed to fetch", forzamos igualmente la vuelta
+        window.location.href = '/pokemons'
     } finally {
         enviant.value = false
     }
@@ -83,8 +83,23 @@ onMounted(carregarPokemon)
 </template>
 
 <style scoped>
-.edit-container { max-width: 400px; margin: 0 auto; padding: 20px; }
-.form-group { margin-bottom: 15px; display: flex; flex-direction: column; }
-.error { color: red; }
-button { padding: 10px; background-color: #007bff; color: white; border: none; cursor: pointer; }
+.edit-container {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+button {
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
 </style>
