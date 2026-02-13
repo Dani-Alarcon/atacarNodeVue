@@ -12,7 +12,6 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  // Ara comprovem el localStorage en lloc de la cookie invisible
   const isAuthenticated = localStorage.getItem('user_logged') === 'true';
 
   if (to.name !== 'home' && !isAuthenticated) {
